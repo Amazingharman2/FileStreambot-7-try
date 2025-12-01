@@ -1,3 +1,9 @@
+Froked From <a href="https://github.com/Avipatilpro/FileStreamBot"> FileStreamBot </a></b>
+
+
+ALL NEW FEATURES CREDITS GOES TO IODEVS - https://t.me/botio_devs | https://t.me/Appuz_007
+
+
 <h1 align="center">FileStreamBot</h1>
 <p align="center">
   <a href="https://github.com/Avipatilpro/FileStreamBot">
