@@ -1,0 +1,17 @@
+lxml
+Beautifulsoup4
+pytz
+shortzy
+
+
+aiohttp
+pyromod
+python-dotenv
+tgcrypto
+motor
+aiofiles
+dnspython
+requests
+jinja2
+flask
+httpx

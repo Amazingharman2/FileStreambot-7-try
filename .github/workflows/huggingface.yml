@@ -1,0 +1,58 @@
+name: Sync to Hugging Face Space
+
+on:
+  push:
+    branches:
+      - Telegram-Client  # Only trigger on this branch
+
+jobs:
+  sync-to-huggingface:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Telegram-Client branch
+        uses: actions/checkout@v3
+        with:
+          ref: Telegram-Client  # Explicitly checkout this branch
+
+      - name: Set up Git 
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Clone and Prepare Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Clone the HF Space
+          git clone https://Appu008:${HF_TOKEN}@huggingface.co/spaces/Appus009/Filetolink-Main hf-space
+          cd hf-space
+          
+          # Backup README.md if it exists
+          if [ -f "README.md" ]; then
+            mv README.md ../README_backup.md
+          fi
+
+          # Clean everything except .git
+          git rm -rf . || echo "No files to remove"
+          git clean -fxd
+
+          # Restore README.md if it existed
+          if [ -f "../README_backup.md" ]; then
+            mv ../README_backup.md README.md
+            git add README.md
+            git commit -m "Preserve existing README.md" || echo "No README changes"
+          fi
+
+      - name: Copy Files to HF Space (including hidden files, excluding README.md)
+        run: |
+          rsync -av --exclude '.git' --exclude 'README.md' ./ hf-space/
+
+      - name: Commit and Force Push to HF Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          cd hf-space
+          git add .
+          git commit -m "Auto sync from Telegram-Client branch [$(date)]" || echo "No changes to commit"
+          git push --force https://Appu008:${HF_TOKEN}@huggingface.co/spaces/Appus009/Filetolink-Main main
